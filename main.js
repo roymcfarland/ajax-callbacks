@@ -2,7 +2,6 @@
 /////////// AJAX REQUEST NO. 1 /////////////
 ////////////////////////////////////////////
 
-
 // Step 1: Create new XMLHttpRequest object
 var xhr = new XMLHttpRequest();
 
@@ -34,10 +33,35 @@ xhr.open('GET', 'data/employees.json');
 xhr.send();
 
 
+
 ////////////////////////////////////////////
 /////////// AJAX REQUEST NO. 2 /////////////
 ////////////////////////////////////////////
 
-var roomStatus = new XMLHttpRequest();
+// Step 1: Create new XMLHttpRequest object
+var roomRequest = new XMLHttpRequest();
 
-roomStatus.onreadystatechange = function() {}
+// Step 2: Create callback function
+roomRequest.onreadystatechange = function () {
+  if(roomRequest.readyState === 4 && roomRequest.status === 200) {
+    var rooms = JSON.parse(roomRequest.responseText);
+    var statusHTML = '<ul class="rooms">';
+    for (var i=0; i<rooms.length; i += 1) {
+      if (rooms[i].available === true) {
+        statusHTML += '<li class="empty">';
+      } else {
+        statusHTML += '<li class="full">';
+      }
+      statusHTML += rooms[i].room;
+      statusHTML += '</li>';
+    }
+    statusHTML += '</ul>';
+    document.getElementById('roomList').innerHTML = statusHTML;
+  }
+};
+
+// Step 3: Open request
+roomRequest.open('GET', '../data/rooms.json');
+
+// Step 4: Send request
+roomRequest.send();
